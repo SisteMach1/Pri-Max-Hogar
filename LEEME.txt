@@ -1,0 +1,13 @@
+PRI-MAX HOGAR - VERSION FINAL LIMPIA
+
+SOLO ESTOS ARCHIVOS:
+- index.html
+- admin.html
+- css/style.css
+- js/app.js
+
+INSTRUCCIONES:
+1. BORRA TODO lo que tenes en la carpeta Pri-Max-Hogar-CON-CARRUSEL-MULTIFOTO
+2. Crea una carpeta VACIA nueva llamada Pri-Max-Hogar
+3. Descomprimi ESTE zip solo, no todos los anteriores
+4. Subi esos 4 archivos a GitHub
