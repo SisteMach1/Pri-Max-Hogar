@@ -40,3 +40,12 @@ function cerrarCarrito(){document.getElementById('carrito').classList.remove('op
 window.addEventListener('storage',()=>{productos=getProductos(); renderProductos();});
 renderProductos();
 ['cli-nombre','cli-direccion','cli-telefono','cli-pago','cli-nota'].forEach(id=>{const el=document.getElementById(id); if(el){el.addEventListener('input',actualizarCarrito); el.addEventListener('change',actualizarCarrito);}});
+
+// ATAJO SECRETO ADMIN: Shift + Ctrl + A
+document.addEventListener('keydown', function(e){
+  if(e.shiftKey && e.ctrlKey && e.key.toLowerCase()==='a'){
+    e.preventDefault();
+    window.location.href='admin.html';
+  }
+});
+console.log('Atajo admin: Shift+Ctrl+A');
