@@ -3,76 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pri-Max Hogar | Electro, Celulares, Muebles</title>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Urbanist:wght@400;600;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<title>Pri-Max Hogar - Todo para tu hogar</title>
 <link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="img/logo.png">
 </head>
 <body>
-<header class="header">
-  <nav class="nav">
-    <a href="index.html" class="logo">PRI-MAX<span>HOGAR</span></a>
-    <div class="nav-links">
-      <a href="#productos">Productos</a>
-      <a href="#" onclick="abrirCarrito(); return false;">🛒 Carrito (<span id="cart-count">0</span>)</a>
-    </div>
-  </nav>
+<header>
+<a href="#" class="logo-header" onclick="filtrar('todos');return false;"><img src="img/logo.png" alt="logo"> PRI-MAX HOGAR</a>
+<div class="nav">
+<a href="#" onclick="filtrar('todos');return false;">PRODUCTOS</a>
+<a href="#" onclick="verCarrito();return false;">CARRITO (<span id="cart-count">0</span>)</a>
+</div>
 </header>
+
 <section class="hero-logo">
-  <img src="img/logo.png" alt="Pri-Max Hogar Logo" class="logo-central">
-  <p class="hero-slogan">Todo para tu hogar - Electrodomesticos - Muebles - Tecnologia</p>
+<img src="img/logo.png" alt="Pri-Max Hogar" class="logo-central">
+<p class="hero-slogan">Todo para tu hogar • Electrodomésticos • Muebles • Bazar • Tecnología</p>
+<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+<button onclick="filtrar('todos')" style="border:1px solid #111;border-radius:20px;padding:6px 14px;font-size:11px;font-weight:800;background:#111;color:#fff;cursor:pointer">TODOS</button>
+<button onclick="filtrar('electro')" style="border:1px solid #ddd;border-radius:20px;padding:6px 14px;font-size:11px;font-weight:700;background:#fff;cursor:pointer">ELECTRO</button>
+<button onclick="filtrar('muebles')" style="border:1px solid #ddd;border-radius:20px;padding:6px 14px;font-size:11px;font-weight:700;background:#fff;cursor:pointer">MUEBLES</button>
+<button onclick="filtrar('bazar')" style="border:1px solid #ddd;border-radius:20px;padding:6px 14px;font-size:11px;font-weight:700;background:#fff;cursor:pointer">BAZAR</button>
+</div>
+<select id="filtro-cat" style="display:none"><option value="todos">todos</option></select>
 </section>
 
+<div id="grid-productos" class="grid"></div>
 
-<section class="hero">
-  <div class="hero-text">
-    <h1>TODO PARA TU HOGAR.<br>EN UN SOLO LUGAR.</h1>
-    <p>Electrodomésticos, celulares, muebles y hogar. Envíos a todo el país.</p>
-    <a href="#productos" class="btn-primary">VER CATÁLOGO</a>
-  </div>
-  <div class="hero-img"></div>
-</section>
-
-<section class="filtros" id="productos">
-  <button class="filtro active" data-cat="todos" onclick="filtrar('todos')">🔥 Todos</button>
-  <button class="filtro" data-cat="celulares" onclick="filtrar('celulares')">📱 Celulares</button>
-  <button class="filtro" data-cat="electro" onclick="filtrar('electro')">⚡ Electro</button>
-  <button class="filtro" data-cat="muebles" onclick="filtrar('muebles')">🛋️ Muebles</button>
-  <button class="filtro" data-cat="hogar" onclick="filtrar('hogar')">🏠 Hogar</button>
-</section>
-
-<main class="container" id="grid-productos"></main>
-
-<div id="carrito" class="carrito">
-  <div class="carrito-header"><h3>TU PEDIDO</h3><span onclick="cerrarCarrito()" style="cursor:pointer; font-size:24px; font-weight:800">✕</span></div>
-  <div id="carrito-items"></div>
-  <div class="carrito-datos">
-    <h4>📋 DATOS DE ENTREGA</h4>
-    <input id="cli-nombre" placeholder="Tu nombre y apellido">
-    <input id="cli-direccion" placeholder="Dirección + Localidad + Provincia">
-    <input id="cli-telefono" placeholder="Tel. de contacto">
-    <select id="cli-pago">
-      <option value="">Forma de pago</option>
-      <option>Transferencia / Efectivo</option>
-      <option>Mercado Pago / Tarjeta</option>
-      <option>12 cuotas sin interés</option>
-      <option>Otro - Consultar</option>
-    </select>
-    <textarea id="cli-nota" placeholder="Nota: color, horario, etc."></textarea>
-  </div>
-  <div class="carrito-footer">
-    <div class="total">Total: $<span id="carrito-total">0</span></div>
-    <a id="btn-finalizar-wsp" class="btn-primary" target="_blank">FINALIZAR POR WHATSAPP</a>
-  </div>
+<!-- MODAL PRODUCTO -->
+<div id="modal" class="modal" onclick="if(event.target===this) cerrarModal()">
+<div class="modal-box" style="position:relative">
+<button class="close-modal" onclick="cerrarModal()">✕</button>
+<div class="modal-img-wrap">
+<img id="modal-img" src="">
+<span class="zoom-hint">🔍 HOVER PARA ZOOM</span>
+<div id="modal-thumbs"></div>
+</div>
+<div class="modal-info">
+<div id="modal-titulo" class="modal-title"></div>
+<div id="modal-medidas" style="color:#777;font-size:13px;margin-top:6px"></div>
+<div id="modal-stock" style="margin-top:10px;font-size:11px;color:#00a650;background:#e6f9ef;display:inline-block;padding:4px 10px;border-radius:20px;font-weight:700"></div>
+<div id="modal-precio" style="font-size:28px;font-weight:900;color:#00a650;margin-top:12px"></div>
+<div id="modal-cuotas" style="font-size:12px;color:#666"></div>
+<p style="margin-top:14px;font-size:12px;color:#555;line-height:1.5">Envíos a todo el país. Garantía oficial. Producto nuevo en caja cerrada. Consultá por financiación.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px">
+<button id="modal-comprar" class="btn-card btn-cart" style="padding:14px">AGREGAR AL CARRITO</button>
+<a id="modal-mp" class="btn-card btn-mp" target="_blank" style="padding:14px">COMPRAR CON MP</a>
+</div>
+</div>
+</div>
 </div>
 
-<div id="overlay" onclick="cerrarCarrito()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:99"></div>
+<!-- MODAL CARRITO -->
+<div id="carrito-modal" class="modal" onclick="if(event.target===this) cerrarCarrito()">
+<div class="modal-box" style="display:block;max-width:500px;padding:22px;position:relative">
+<button class="close-modal" onclick="cerrarCarrito()">✕</button>
+<h2 style="font-family:Anton,sans-serif">TU CARRITO</h2>
+<div id="carrito-lista" style="margin:18px 0;max-height:300px;overflow:auto"></div>
+<div id="carrito-total" style="font-weight:900;font-size:18px;margin-bottom:14px"></div>
+<input id="cliente-nombre" placeholder="Tu nombre completo" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;margin-bottom:8px">
+<input id="cliente-tel" placeholder="Tu WhatsApp" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;margin-bottom:8px">
+<input id="cliente-dir" placeholder="Dirección (opcional)" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;margin-bottom:12px">
+<button onclick="finalizarCompra()" style="width:100%;background:#25D366;color:#fff;border:none;border-radius:10px;padding:14px;font-weight:900;cursor:pointer">FINALIZAR POR WHATSAPP</button>
+</div>
+</div>
 
 <footer class="footer">
-  <p>PRI-MAX HOGAR © 2026</p>
-  <!-- ADMIN SECRETO: puntito invisible inferior izquierda para celular -->
-  <a href="admin.html" id="admin-secret-mobile" aria-label="admin"></a>
+<p>PRI-MAX HOGAR © 2026 - Apóstoles, Misiones - Envios a todo el pais</p>
+<a href="admin.html" id="admin-secret-mobile" aria-label="admin"></a>
 </footer>
 
 <script src="js/app.js"></script>
+<script>
+// ADMIN 5 SEGUNDOS CELULAR
+(function(){
+const b=document.getElementById('admin-secret-mobile');
+if(!b) return;
+let t,p;
+function start(e){
+ e.preventDefault();
+ let s=0;
+ const fb=document.createElement('div');
+ fb.id='admin-fb';
+ fb.style='position:fixed;bottom:15px;left:15px;background:#111;color:#fff;padding:9px 14px;border-radius:20px;font-size:11px;font-weight:800;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.3)';
+ fb.textContent='Mantén 5s para admin... 0s';
+ document.body.appendChild(fb);
+ p=setInterval(()=>{s++;const f=document.getElementById('admin-fb');if(f){f.textContent='Mantén 5s para admin... '+s+'s';f.style.background=s>=3?'#00a650':'#111';}},1000);
+ t=setTimeout(()=>{clearInterval(p);const f=document.getElementById('admin-fb');if(f)f.remove();location.href='admin.html';},5000);
+}
+function cancel(){clearTimeout(t);clearInterval(p);const f=document.getElementById('admin-fb');if(f)f.remove();}
+b.addEventListener('touchstart',start,{passive:false});
+b.addEventListener('mousedown',start);
+b.addEventListener('touchend',cancel);
+b.addEventListener('mouseup',cancel);
+b.addEventListener('mouseleave',cancel);
+b.addEventListener('touchcancel',cancel);
+})();
+</script>
 </body>
 </html>

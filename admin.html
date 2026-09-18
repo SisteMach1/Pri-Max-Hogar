@@ -3,81 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Pri-Max Hogar</title>
-<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;800&display=swap" rel="stylesheet">
+<title>Admin - Pri-Max Hogar</title>
 <style>
-*{font-family:'Urbanist', sans-serif; box-sizing:border-box} body{margin:0; background:#f5f5f5}
-.login{max-width:380px; margin:100px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.1); text-align:center}
-.login h2{margin:0 0 20px; font-weight:800} input, select, textarea{width:100%; padding:12px; margin:6px 0 12px; border:1px solid #ddd; border-radius:8px; font-size:14px}
-button{padding:12px 18px; border:none; border-radius:8px; font-weight:700; cursor:pointer} .btn-black{background:#111; color:#fff; width:100%} .btn-green{background:#25D366; color:#fff} .btn-red{background:#ff4444; color:#fff}
-.admin-wrap{max-width:1100px; margin:20px auto; padding:20px} .header-admin{display:flex; justify-content:space-between; align-items:center; background:#fff; padding:15px 20px; border-radius:12px; margin-bottom:20px}
-.grid-admin{display:grid; grid-template-columns:350px 1fr; gap:20px} .card{background:#fff; padding:18px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.producto-admin{display:flex; gap:12px; padding:12px; background:#fff; border-radius:10px; margin-bottom:10px; align-items:center}
-.producto-admin img{width:70px; height:70px; object-fit:cover; border-radius:8px} .hidden{display:none} @media(max-width:800px){.grid-admin{grid-template-columns:1fr}}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:sans-serif;background:#f5f5f5;padding:20px}
+h1{font-size:20px;margin-bottom:15px}
+.panel{display:grid;grid-template-columns:340px 1fr;gap:20px;max-width:1200px;margin:0 auto}
+.card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+label{font-size:11px;font-weight:800;display:block;margin-top:10px;margin-bottom:4px}
+input,select{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:13px}
+button{border:none;border-radius:8px;padding:10px 14px;font-weight:800;cursor:pointer}
+.btn-save{background:#111;color:#fff;width:100%;margin-top:12px;padding:12px}
+.grid-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.item{border:1px solid #eee;border-radius:10px;overflow:hidden;background:#fff}
+.item img{width:100%;height:140px;object-fit:cover}
+.item-body{padding:10px}
+@media(max-width:800px){.panel{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div id="login-screen" class="login">
-  <h2>🔐 ADMIN</h2>
-  <input type="password" id="clave" placeholder="Clave de acceso">
-  <button class="btn-black" onclick="login()">ENTRAR</button>
-  <p id="error" style="color:red; font-size:13px; margin-top:10px"></p>
+<h1>⚙️ ADMIN PRI-MAX HOGAR <a href="index.html" style="font-size:12px;margin-left:12px">← Volver a tienda</a></h1>
+<div class="panel">
+<div class="card">
+<h3 id="form-title">Agregar producto</h3>
+<input type="hidden" id="edit-id">
+<label>Nombre</label><input id="nombre">
+<label>Categoria</label><select id="categoria"><option value="electro">electro</option><option value="muebles">muebles</option><option value="bazar">bazar</option><option value="tecnologia">tecnologia</option></select>
+<label>Medidas / Detalle</label><input id="medidas" placeholder="Ej: 1500W - Sin aceite">
+<label>Precio</label><input id="precio" type="number">
+<label>Stock</label><input id="stock" type="number" value="10">
+<label>Link MercadoPago (opcional)</label><input id="mp_link" placeholder="https://mpago.la/...">
+<label>Fotos del producto (podés elegir varias)</label>
+<input type="file" id="foto" accept="image/*" multiple>
+<div id="preview-container" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px"></div>
+<button class="btn-save" onclick="guardarProducto()">GUARDAR PRODUCTO</button>
+<button onclick="limpiarForm()" style="width:100%;margin-top:8px;background:#eee">LIMPIAR</button>
+<div style="margin-top:15px;padding:10px;background:#fff3cd;border-radius:8px;font-size:11px">Clave admin: todocaser.2020<br>Atajo PC: Shift+Ctrl+A<br>Celular: 5s en esquina inferior izquierda</div>
 </div>
-
-<div id="admin-screen" class="admin-wrap hidden">
-  <div class="header-admin">
-    <h2 style="margin:0">PANEL</h2>
-    <div><button onclick="cerrarSesion()" style="background:#eee; padding:8px 12px; border-radius:8px; border:none; cursor:pointer">Salir</button> <a href="index.html" style="margin-left:10px; text-decoration:none; font-weight:800; color:#111">Ver tienda →</a></div>
-  </div>
-  <div class="grid-admin">
-    <div class="card">
-      <label>Nombre del producto</label>
-      <input type="hidden" id="edit-id">
-      <input id="nombre" placeholder="Ej: Samsung A15 128GB">
-      <label>Categoría</label>
-      <select id="categoria"><option value="celulares">📱 Celulares</option><option value="electro">⚡ Electrodomésticos</option><option value="muebles">🛋️ Muebles</option><option value="hogar">🏠 Hogar</option></select>
-      <label>Descripción / Medidas</label>
-      <textarea id="medidas" placeholder="Ej: 6.5 pulgadas, 128GB, 50MP"></textarea>
-      <label>Precio</label>
-      <input type="number" id="precio" placeholder="Ej: 250000">
-      <label>Stock</label>
-      <input type="number" id="stock" placeholder="Ej: 5">
-      <label>Link Mercado Pago (opcional)</label>
-      <input id="mp_link" placeholder="https://...">
-      <label>Foto del producto</label>
-      <input type="file" id="foto" accept="image/*">
-      <img id="preview" style="width:100%; height:180px; object-fit:cover; border-radius:8px; display:none; margin-bottom:10px">
-      <button class="btn-black" onclick="guardarProducto()">💾 GUARDAR PRODUCTO</button>
-      <button onclick="limpiarForm()" style="width:100%; margin-top:8px; background:#eee; border:none; padding:10px; border-radius:8px; cursor:pointer">Cancelar</button>
-      <hr style="margin:20px 0">
-      <button class="btn-green" onclick="exportar()" style="width:100%; padding:12px; border-radius:8px; border:none; cursor:pointer">⬇️ Exportar copia</button>
-      <input type="file" id="importarFile" accept=".json" style="margin-top:10px">
-      <button onclick="importar()" style="width:100%; margin-top:6px; background:#eee; padding:10px; border-radius:8px; border:none; cursor:pointer">⬆️ Importar copia</button>
-    </div>
-    <div>
-      <div class="card" style="margin-bottom:15px;"><span>Total productos: <b id="total-prod">0</b></span></div>
-      <div id="lista-productos"></div>
-    </div>
-  </div>
+<div class="card">
+<h3>Productos (<span id="count">0</span>)</h3>
+<div id="lista-admin" class="grid-admin" style="margin-top:12px"></div>
 </div>
-
+</div>
 <script>
-const CLAVE_CORRECTA="todocaser.2020"; const LS_KEY="primax_productos_v2";
-const productosDefault=[{id:1,nombre:"Samsung Galaxy A54 128GB Liberado",categoria:"celulares",medidas:"6.4'' AMOLED - 8GB RAM - 50MP",precio:345000,stock:8,img:"https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=600",mp_link:""},{id:2,nombre:"Horno Eléctrico 45L Grill",categoria:"electro",medidas:"2000W - Convección - Timer",precio:89000,stock:15,img:"https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?q=80&w=600",mp_link:""},{id:3,nombre:"Rack TV 180cm Roble",categoria:"muebles",medidas:"180x45x60 - Melamina 18mm",precio:159000,stock:4,img:"https://images.unsplash.com/photo-1532372320572-cda25653a694?q=80&w=600",mp_link:""}];
-function getProductos(){try{const s=localStorage.getItem(LS_KEY); if(s) return JSON.parse(s);}catch(e){} return productosDefault;}
-function saveProductos(p){localStorage.setItem(LS_KEY,JSON.stringify(p));}
-function login(){const c=document.getElementById('clave').value; if(c===CLAVE_CORRECTA){sessionStorage.setItem('admin_logueado','si'); mostrarAdmin();} else {document.getElementById('error').innerText='Clave incorrecta';}}
-function mostrarAdmin(){document.getElementById('login-screen').classList.add('hidden'); document.getElementById('admin-screen').classList.remove('hidden'); renderAdmin();}
-function cerrarSesion(){sessionStorage.removeItem('admin_logueado'); location.reload();}
-let imgBase64=""; document.getElementById('foto').addEventListener('change',function(e){const file=e.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=function(ev){imgBase64=ev.target.result; document.getElementById('preview').src=imgBase64; document.getElementById('preview').style.display='block';}; r.readAsDataURL(file);});
-function guardarProducto(){const id=document.getElementById('edit-id').value; const nombre=document.getElementById('nombre').value.trim(); const categoria=document.getElementById('categoria').value; const medidas=document.getElementById('medidas').value.trim(); const precio=parseInt(document.getElementById('precio').value); const stock=parseInt(document.getElementById('stock').value)||0; const mp_link=document.getElementById('mp_link').value.trim(); if(!nombre||!precio){alert('Nombre y precio obligatorios'); return;} let productos=getProductos(); if(id){const idx=productos.findIndex(p=>p.id==id); productos[idx]={...productos[idx],nombre,categoria,medidas,precio,stock,mp_link,img:imgBase64||productos[idx].img};} else {productos.push({id:Date.now(),nombre,categoria,medidas,precio,stock,mp_link,img:imgBase64||"https://via.placeholder.com/600x400?text=Sin+foto"});} saveProductos(productos); limpiarForm(); renderAdmin();}
-function renderAdmin(){const productos=getProductos(); document.getElementById('total-prod').innerText=productos.length; document.getElementById('lista-productos').innerHTML=productos.map(p=>`<div class="producto-admin"><img src="${p.img}"><div style="flex:1"><b>${p.nombre}</b><br><small>${p.categoria} | $${p.precio.toLocaleString('es-AR')} | Stock: ${p.stock}</small><br><small style="color:#777">${p.medidas}</small></div><div><button onclick="editar(${p.id})" style="background:#111; color:#fff; padding:8px 12px; border-radius:8px; border:none; cursor:pointer">Editar</button><button class="btn-red" onclick="borrar(${p.id})" style="margin-left:5px; border:none; cursor:pointer; padding:8px 12px; border-radius:8px">X</button></div></div>`).join('');}
-function editar(id){const p=getProductos().find(x=>x.id==id); document.getElementById('edit-id').value=p.id; document.getElementById('nombre').value=p.nombre; document.getElementById('categoria').value=p.categoria; document.getElementById('medidas').value=p.medidas; document.getElementById('precio').value=p.precio; document.getElementById('stock').value=p.stock; document.getElementById('mp_link').value=p.mp_link; imgBase64=p.img; document.getElementById('preview').src=p.img; document.getElementById('preview').style.display='block'; window.scrollTo(0,0);}
-function borrar(id){if(!confirm('¿Borrar este producto?')) return; let productos=getProductos().filter(p=>p.id!=id); saveProductos(productos); renderAdmin();}
-function limpiarForm(){document.getElementById('edit-id').value=''; document.getElementById('nombre').value=''; document.getElementById('medidas').value=''; document.getElementById('precio').value=''; document.getElementById('stock').value=''; document.getElementById('mp_link').value=''; document.getElementById('foto').value=''; imgBase64=''; document.getElementById('preview').style.display='none';}
-function exportar(){const data=localStorage.getItem(LS_KEY)||JSON.stringify(getProductos()); const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='primax-productos-backup.json'; a.click();}
-function importar(){const file=document.getElementById('importarFile').files[0]; if(!file) return alert('Elegí un archivo .json'); const reader=new FileReader(); reader.onload=e=>{try{const json=JSON.parse(e.target.result); saveProductos(json); renderAdmin(); alert('Productos importados!');}catch{alert('Archivo inválido');}}; reader.readAsText(file);}
-if(sessionStorage.getItem('admin_logueado')==='si'){mostrarAdmin();}
+let imgArray=[];
+document.getElementById('foto').addEventListener('change',function(e){
+ const files=Array.from(e.target.files);
+ imgArray=[];
+ const cont=document.getElementById('preview-container');
+ cont.innerHTML='';
+ files.forEach(f=>{
+  const r=new FileReader();
+  r.onload=ev=>{
+   imgArray.push(ev.target.result);
+   const im=document.createElement('img');
+   im.src=ev.target.result;
+   im.style='width:100%;height:70px;object-fit:cover;border-radius:6px';
+   cont.appendChild(im);
+  };
+  r.readAsDataURL(f);
+ });
+});
+
+function getProductos(){let p=localStorage.getItem('primax_productos');if(p){try{return JSON.parse(p)}catch{}}return [];}
+function saveProductos(p){localStorage.setItem('primax_productos',JSON.stringify(p));}
+function limpiarForm(){document.getElementById('edit-id').value='';document.getElementById('nombre').value='';document.getElementById('medidas').value='';document.getElementById('precio').value='';document.getElementById('stock').value='10';document.getElementById('mp_link').value='';document.getElementById('foto').value='';imgArray=[];document.getElementById('preview-container').innerHTML='';document.getElementById('form-title').innerText='Agregar producto';}
+function guardarProducto(){
+ const id=document.getElementById('edit-id').value;
+ const nombre=document.getElementById('nombre').value.trim();
+ const categoria=document.getElementById('categoria').value;
+ const medidas=document.getElementById('medidas').value.trim();
+ const precio=parseInt(document.getElementById('precio').value);
+ const stock=parseInt(document.getElementById('stock').value)||0;
+ const mp_link=document.getElementById('mp_link').value.trim();
+ if(!nombre||!precio){alert('Nombre y precio obligatorios');return;}
+ let productos=getProductos();
+ let imgs=imgArray.length>0?imgArray:[];
+ if(id){
+  const idx=productos.findIndex(p=>p.id==id);
+  const existente=productos[idx].imagenes||[productos[idx].img];
+  const finalImgs=imgs.length>0?imgs:existente;
+  productos[idx]={...productos[idx],nombre,categoria,medidas,precio,stock,mp_link,img:finalImgs[0],imagenes:finalImgs};
+ }else{
+  const finalImgs=imgs.length>0?imgs:["https://via.placeholder.com/400x300?text=Sin+foto"];
+  productos.push({id:Date.now(),nombre,categoria,medidas,precio,stock,mp_link,img:finalImgs[0],imagenes:finalImgs});
+ }
+ saveProductos(productos);limpiarForm();renderAdmin();
+}
+function renderAdmin(){
+ const productos=getProductos();
+ document.getElementById('count').innerText=productos.length;
+ document.getElementById('lista-admin').innerHTML=productos.map(p=>`<div class=item><img src="${p.img}"><div class=item-body><div style="font-weight:800;font-size:12px">${p.nombre}</div><div style="font-size:11px;color:#666">${p.categoria} - $${p.precio}</div><div style="font-size:10px">${p.imagenes?p.imagenes.length:1} fotos</div><div style="display:flex;gap:6px;margin-top:8px"><button onclick="editar(${p.id})" style="flex:1;background:#111;color:#fff;font-size:11px">Editar</button><button onclick="borrar(${p.id})" style="flex:1;background:#ffe0e0;color:#c00;font-size:11px">Borrar</button></div></div></div>`).join('');
+}
+function editar(id){const p=getProductos().find(x=>x.id==id);document.getElementById('edit-id').value=p.id;document.getElementById('nombre').value=p.nombre;document.getElementById('categoria').value=p.categoria;document.getElementById('medidas').value=p.medidas;document.getElementById('precio').value=p.precio;document.getElementById('stock').value=p.stock;document.getElementById('mp_link').value=p.mp_link||'';const imgs=p.imagenes||[p.img];imgArray=imgs;const cont=document.getElementById('preview-container');cont.innerHTML='';imgs.forEach(src=>{const im=document.createElement('img');im.src=src;im.style='width:100%;height:70px;object-fit:cover;border-radius:6px';cont.appendChild(im);});document.getElementById('form-title').innerText='Editando: '+p.nombre;window.scrollTo(0,0);}
+function borrar(id){if(!confirm('Borrar?')) return;let productos=getProductos().filter(p=>p.id!=id);saveProductos(productos);renderAdmin();}
+// Clave simple
+if(prompt('Clave admin:')!=='todocaser.2020'){alert('Clave incorrecta');location.href='index.html';}
+renderAdmin();
 </script>
 </body>
 </html>
